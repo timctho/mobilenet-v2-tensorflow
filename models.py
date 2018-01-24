@@ -181,21 +181,17 @@ class MobileNetV2(object):
     def _inverted_bottleneck(self, input, up_sample_rate, channels, subsample):
         with tf.variable_scope('inverted_bottleneck{}_{}_{}'.format(self.i, up_sample_rate, subsample)):
             self.i += 1
-            if subsample:
-                stride = 2
-                # input = tc.layers.max_pool2d(input, 3, padding='SAME')
-            else:
-                stride = 1
+            stride = 2 if subsample else 1
             output = tc.layers.conv2d(input, up_sample_rate*input.get_shape().as_list()[-1], 1,
                                       activation_fn=tf.nn.relu6,
                                       normalizer_fn=self.normalizer, normalizer_params=self.bn_params)
             output = tc.layers.separable_conv2d(output, None, 3, 1, stride=stride,
+                                                activation_fn=tf.nn.relu6,
                                                 normalizer_fn=self.normalizer, normalizer_params=self.bn_params)
             output = tc.layers.conv2d(output, channels, 1, activation_fn=None,
                                       normalizer_fn=self.normalizer, normalizer_params=self.bn_params)
             if input.get_shape().as_list()[-1] == channels:
                 output = tf.add(input, output)
-
             return output
 
 

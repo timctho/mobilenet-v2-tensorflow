@@ -174,7 +174,7 @@ class MobileNetV2(object):
         self.output = self._inverted_bottleneck(self.output, 6, 160, 0)
         self.output = self._inverted_bottleneck(self.output, 6, 320, 0)
         self.output = tc.layers.conv2d(self.output, 1280, 1)
-        self.output = tc.layers.max_pool2d(self.output, kernel_size=7)
+        self.output = tc.layers.avg_pool2d(self.output, 7)
         self.output = tc.layers.conv2d(self.output, 1000, 1, activation_fn=None)
 
 
@@ -197,7 +197,8 @@ class MobileNetV2(object):
 
 
 if __name__ == '__main__':
-    model = MobileNetV1(False)
+    model = MobileNetV2(False)
+    print(model.output.get_shape())
     board_writer = tf.summary.FileWriter(logdir='./', graph=tf.get_default_graph())
 
     fake_data = np.ones(shape=(1, 224, 224, 3))

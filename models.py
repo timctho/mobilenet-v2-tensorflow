@@ -173,7 +173,7 @@ class MobileNetV2(object):
         self.output = self._inverted_bottleneck(self.output, 6, 160, 0)
         self.output = self._inverted_bottleneck(self.output, 6, 160, 0)
         self.output = self._inverted_bottleneck(self.output, 6, 320, 0)
-        self.output = tc.layers.conv2d(self.output, 1280, 1)
+        self.output = tc.layers.conv2d(self.output, 1280, 1, normalizer_fn=self.normalizer, normalizer_params=self.bn_params)
         self.output = tc.layers.avg_pool2d(self.output, 7)
         self.output = tc.layers.conv2d(self.output, 1000, 1, activation_fn=None)
 
